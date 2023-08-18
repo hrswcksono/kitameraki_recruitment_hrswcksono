@@ -20,7 +20,7 @@ class Controller {
     try {
       const page = +req.query.page || 1;
       const limit = +req.query.limit || 10;
-      let data = model.readData(page, limit);
+      let data = model.readDataPagination(page, limit);
       res.status(200).json({
         status: 200,
         page: page,

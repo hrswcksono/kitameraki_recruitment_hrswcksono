@@ -1,18 +1,22 @@
 import React, { useState, useEffect } from "react";
-import { TextField, MaskedTextField } from "@fluentui/react/lib/TextField";
-import { DefaultButton, PrimaryButton } from "@fluentui/react/lib/Button";
-import { addItems, getItems } from "./fetchApi";
+import { TextField} from "@fluentui/react/lib/TextField";
+import { DefaultButton, } from "@fluentui/react/lib/Button";
+import { addItems, deleteItem, editItems, getItems } from "./fetchApi";
 import { useLocation, useNavigate } from "react-router-dom";
-import ScrollMagic from "scrollmagic";
 
 const Page = () => {
   const [form, setForm] = useState({
     title: "",
     description: "",
   });
+  const [editForm, setEditForm] = useState({
+    title: "",
+    description: "",
+  });
   const [data, setData] = useState([]);
   const [page, setPage] = useState(1);
   const [endPage, setEndPage] = useState(false);
+  const [editIndex, setEditIndex] = useState(-1);
 
   const navigation = useNavigate();
   const location = useLocation();
@@ -32,11 +36,37 @@ const Page = () => {
     }
   };
 
+  const openEditForm = (index, data) => {
+    setEditIndex(index);
+    setEditForm({
+      title: data.title,
+      description: data.description,
+    });
+  };
+
+  const closeEditForm = () => {
+    setEditIndex(-1);
+  };
+
+  const saveEdit = (id) => {
+    console.log(id);
+    editItems(+id, editForm);
+    closeEditForm();
+    getData(page);
+    navigation("");
+  };
+
+  const deleteItems = (id) => {
+    deleteItem(+id)
+    navigation("");
+  };
+
   const submitFormItem = () => {
     addItems(form);
     setData([]);
     setEndPage(false);
     setPage(1);
+    getData(page);
     navigation("");
   };
 
@@ -54,9 +84,8 @@ const Page = () => {
   };
 
   useEffect(() => {
-    if (data.length === 0) {
-      getData(page);
-    }
+    getData(page);
+
     window.addEventListener("scroll", handleScroll, {
       passive: true,
     });
@@ -80,7 +109,7 @@ const Page = () => {
       <DefaultButton
         text="Add Item"
         allowDisabledFocus
-        //  disabled={disabled} checked={checked}
+        className="mb-5"
         onClick={submitFormItem}
       />
       <div className="w-full">
@@ -91,15 +120,64 @@ const Page = () => {
               key={index.toString()}
             >
               <div className="grid justify-items-start">
-                <div className="text-2xl">{item.title}</div>
-                <div>{item.description}</div>
+                {editIndex === index ? (
+                  <>
+                    <TextField
+                      label="Title"
+                      value={editForm.title}
+                      onChange={(e) =>
+                        setEditForm({ ...editForm, title: e.target.value })
+                      }
+                    />
+                    <TextField
+                      className="my-1"
+                      label="Description"
+                      value={editForm.description}
+                      onChange={(e) =>
+                        setEditForm({
+                          ...editForm,
+                          description: e.target.value,
+                        })
+                      }
+                    />
+                  </>
+                ) : (
+                  <>
+                    <div className="text-2xl">{item.title}</div>
+                    <div>{item.description}</div>
+                  </>
+                )}
               </div>
-              <div className="grid justify-items-end">
+              <div className="grid justify-items-end content-around">
                 <div>
-                  <DefaultButton text="Edit" allowDisabledFocus />
+                  {editIndex === index ? (
+                    <DefaultButton
+                      text="Cancel"
+                      onClick={() => closeEditForm()}
+                      allowDisabledFocus
+                    />
+                  ) : (
+                    <DefaultButton
+                      text="Edit"
+                      onClick={() => openEditForm(index, item)}
+                      allowDisabledFocus
+                    />
+                  )}
                 </div>
                 <div>
-                  <DefaultButton text="Delete" allowDisabledFocus />
+                  {editIndex === index ? (
+                    <DefaultButton
+                      text="Save"
+                      onClick={() => saveEdit(item.id)}
+                      allowDisabledFocus
+                    />
+                  ) : (
+                    <DefaultButton
+                      text="Delete"
+                      onClick={() => deleteItems(item.id)}
+                      allowDisabledFocus
+                    />
+                  )}
                 </div>
               </div>
             </div>

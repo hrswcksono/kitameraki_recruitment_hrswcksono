@@ -15,16 +15,8 @@ class Model {
     return value;
   }
 
-  static readData(page, limit) {
-    let mykeys = myCache.keys();
-    if (mykeys.length == 0) {
-      return [];
-    }
-    let data = [];
-    for (let i = 0; i < mykeys.length; i++) {
-      data.push(myCache.get(mykeys[i]));
-      data[i]["id"] = +mykeys[i];
-    }
+  static readDataPagination(page, limit) {
+    let data = this.readData();
     data = data.sort((a, b) => b.id - a.id);
     let datas = this.paginate(data, limit);
     if (page >= 1 && data.length > (page - 1) * limit) {
@@ -70,6 +62,20 @@ class Model {
   static saveData(title, description, key) {
     let obj = new Model(title, description);
     let success = myCache.set(key, obj, 10000);
+  }
+
+  static readData() {
+    let mykeys = myCache.keys();
+    if (mykeys.length == 0) {
+      return [];
+    }
+    let data = [];
+    for (let i = 0; i < mykeys.length; i++) {
+      data.push(myCache.get(mykeys[i]));
+      data[i]["id"] = +mykeys[i];
+    }
+
+    return data;
   }
 
   static paginate(arr, size) {
