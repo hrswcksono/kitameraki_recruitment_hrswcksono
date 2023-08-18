@@ -17,13 +17,17 @@ class Model {
 
   static readData(page, limit) {
     let mykeys = myCache.keys();
+    if (mykeys.length == 0) {
+      return [];
+    }
     let data = [];
     for (let i = 0; i < mykeys.length; i++) {
       data.push(myCache.get(mykeys[i]));
       data[i]["id"] = +mykeys[i];
     }
+    data = data.sort((a, b) => b.id - a.id);
     let datas = this.paginate(data, limit);
-    if (page >= 1) {
+    if (page >= 1 && data.length > (page - 1) * limit) {
       return datas[page - 1];
     }
     return [];
@@ -32,7 +36,6 @@ class Model {
   static updateData(body, param) {
     let data = this.readData();
     const { title, description } = body;
-    console.log(data);
     let findData = data.find((item) => item.id === +param.id);
     if (findData) {
       this.saveData(title, description, +param.id);
@@ -53,7 +56,6 @@ class Model {
 
   static getMaxNumber() {
     let mykeys = myCache.keys();
-    console.log(mykeys);
     let data = [];
     for (let i = 0; i < mykeys.length; i++) {
       data.push(+mykeys[i]);
