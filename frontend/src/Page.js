@@ -4,12 +4,14 @@ import { DefaultButton } from "@fluentui/react/lib/Button";
 import { addItems, getItems } from "./fetchApi";
 import { useLocation, useNavigate } from "react-router-dom";
 import ItemList from "./components/ItemList";
+import { useForm } from "react-hook-form";
 
 const Page = () => {
-  const [form, setForm] = useState({
-    title: "",
-    description: "",
-  });
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm();
 
   const [data, setData] = useState([]);
   const [page, setPage] = useState(1);
@@ -30,12 +32,8 @@ const Page = () => {
     }
   };
 
-  const submitFormItem = () => {
-    addItems(form, () => {
-      setForm({
-        title: "",
-        description: "",
-      });
+  const submitFormItem = (input) => {
+    addItems(input, () => {
       refresh();
     });
   };
@@ -76,25 +74,30 @@ const Page = () => {
       <div className="text-3xl font-bold underline my-5">
         Task Management App
       </div>
-      <TextField
-        label="Title"
-        value={form.title}
-        onChange={(e) => setForm({ ...form, title: e.target.value })}
-      />
-      <TextField
-        className="my-3"
-        label="Description"
-        value={form.description}
-        onChange={(e) => setForm({ ...form, description: e.target.value })}
-        multiline
-        autoAdjustHeight
-      />
-      <DefaultButton
-        text="Add Item"
-        allowDisabledFocus
-        className="mb-5"
-        onClick={submitFormItem}
-      />
+      <form onSubmit={handleSubmit(submitFormItem)}>
+        <TextField
+          label="Title"
+          {...register("title", {
+            required: true,
+            pattern: /^[A-Za-z]+$/i,
+          })}
+        />
+        {errors?.title?.type === "required" && <p>This field is required</p>}
+        <TextField
+          className="my-3"
+          label="Description"
+          multiline
+          autoAdjustHeight
+          {...register("description")}
+        />
+        {/* <input type="submit" /> */}
+        <DefaultButton
+          text="Add Item"
+          allowDisabledFocus
+          className="mb-5"
+          type="submit"
+        />
+      </form>
       <ItemList data={data} refresh={refresh} />
     </div>
   );
