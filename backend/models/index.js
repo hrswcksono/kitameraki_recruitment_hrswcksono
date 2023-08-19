@@ -31,19 +31,19 @@ class Model {
     let findData = data.find((item) => item.id === +param.id);
     if (findData) {
       this.saveData(title, description, +param.id);
-      return "berhasil";
+      return true;
     }
-    return "data tidak ditemukan";
+    return false;
   }
 
   static deleteData(param) {
     let data = this.readData();
     let findData = data.find((item) => item.id === +param.id);
     if (!findData) {
-      return "data tidak ditemukan";
+      return 0;
     }
     myCache.del(+param.id);
-    return "berhasil";
+    return 1;
   }
 
   static getMaxNumber() {

@@ -14,21 +14,21 @@ const getItems = async (page, limit, cb) => {
   }
 };
 
-const addItems = async (item) => {
+const addItems = async (item, cb) => {
   try {
     let result = await axios({
       method: "POST",
       url: URL,
       data: item,
     });
-    //   Swal.fire("Add Book", book.name + " has been added", "success");
-    console.log(result);
+    Swal.fire("Add Item", item.title + " has been added", "success");
+    cb(result.data);
   } catch (error) {
     console.log(error);
   }
 };
 
-const editItems = async (id, item) => {
+const editItems = async (id, item, cb) => {
   try {
     let result = await axios({
       method: "PUT",
@@ -36,14 +36,14 @@ const editItems = async (id, item) => {
       data: item,
     });
 
-    // Swal.fire("Edit Book", book.name + " has been updated", "success");
-    console.log(result.data);
+    Swal.fire("Edit Item", item.title + " has been updated", "success");
+    cb(result.data);
   } catch (error) {
     console.log(error);
   }
 };
 
-const deleteItem = async (id) => {
+const deleteItem = async (id, cb) => {
   try {
     Swal.fire({
       title: "Are you sure?",
@@ -53,13 +53,13 @@ const deleteItem = async (id) => {
       confirmButtonColor: "#3085d6",
       cancelButtonColor: "#d33",
       confirmButtonText: "Yes, delete it!",
-    }).then(async (result) => {
-      if (result.isConfirmed) {
+    }).then(async (temp) => {
+      if (temp.isConfirmed) {
         let result = await axios({
           method: "DELETE",
           url: `${URL}/${id}`,
         });
-        console.log(result);
+        cb(result.data);
         Swal.fire("Deleted!", "Your file has been deleted.", "success");
       }
     });

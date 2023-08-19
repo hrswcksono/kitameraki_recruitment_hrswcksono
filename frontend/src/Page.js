@@ -1,22 +1,19 @@
 import React, { useState, useEffect } from "react";
-import { TextField} from "@fluentui/react/lib/TextField";
-import { DefaultButton, } from "@fluentui/react/lib/Button";
-import { addItems, deleteItem, editItems, getItems } from "./fetchApi";
+import { TextField } from "@fluentui/react/lib/TextField";
+import { DefaultButton } from "@fluentui/react/lib/Button";
+import { addItems, getItems } from "./fetchApi";
 import { useLocation, useNavigate } from "react-router-dom";
+import ItemList from "./components/ItemList";
 
 const Page = () => {
   const [form, setForm] = useState({
     title: "",
     description: "",
   });
-  const [editForm, setEditForm] = useState({
-    title: "",
-    description: "",
-  });
+
   const [data, setData] = useState([]);
   const [page, setPage] = useState(1);
   const [endPage, setEndPage] = useState(false);
-  const [editIndex, setEditIndex] = useState(-1);
 
   const navigation = useNavigate();
   const location = useLocation();
@@ -27,57 +24,37 @@ const Page = () => {
       document.documentElement.scrollHeight;
 
     if (bottom) {
-      console.log("end scroll");
       if (!endPage) {
-        console.log("next page");
-        getData(page);
         navigation("");
       }
     }
   };
 
-  const openEditForm = (index, data) => {
-    setEditIndex(index);
-    setEditForm({
-      title: data.title,
-      description: data.description,
+  const submitFormItem = () => {
+    addItems(form, () => {
+      setForm({
+        title: "",
+        description: "",
+      });
+      refresh();
     });
   };
 
-  const closeEditForm = () => {
-    setEditIndex(-1);
-  };
-
-  const saveEdit = (id) => {
-    console.log(id);
-    editItems(+id, editForm);
-    closeEditForm();
-    getData(page);
-    navigation("");
-  };
-
-  const deleteItems = (id) => {
-    deleteItem(+id)
-    navigation("");
-  };
-
-  const submitFormItem = () => {
-    addItems(form);
-    setData([]);
+  const refresh = () => {
+    console.log("refresh");
     setEndPage(false);
     setPage(1);
-    getData(page);
+    setData([]);
     navigation("");
   };
 
   const getData = (page) => {
-    console.log("panggil data");
     getItems(page, 8, (result) => {
       const nextPage = page + 1;
       const nextData = data.concat(result.data);
       setData(nextData);
       setPage(nextPage);
-      if (result.data.count === 0) {
+      if (result.count === 0) {
         setEndPage(true);
       }
     });
@@ -89,7 +66,6 @@ const Page = () => {
     window.addEventListener("scroll", handleScroll, {
       passive: true,
     });
-
     return () => {
       window.removeEventListener("scroll", handleScroll);
     };
@@ -97,14 +73,21 @@ const Page = () => {
 
   return (
     <div className="w-8/12 justify-self-center">
+      <div className="text-3xl font-bold underline my-5">
+        Task Management App
+      </div>
       <TextField
         label="Title"
+        value={form.title}
         onChange={(e) => setForm({ ...form, title: e.target.value })}
       />
       <TextField
         className="my-3"
         label="Description"
+        value={form.description}
         onChange={(e) => setForm({ ...form, description: e.target.value })}
+        multiline
+        autoAdjustHeight
       />
       <DefaultButton
         text="Add Item"
@@ -112,78 +95,7 @@ const Page = () => {
         className="mb-5"
         onClick={submitFormItem}
       />
-      <div className="w-full">
-        {data.map((item, index) => {
-          return (
-            <div
-              className="border-2 my-1 rounded-md p-2 flex justify-between px-10"
-              key={index.toString()}
-            >
-              <div className="grid justify-items-start">
-                {editIndex === index ? (
-                  <>
-                    <TextField
-                      label="Title"
-                      value={editForm.title}
-                      onChange={(e) =>
-                        setEditForm({ ...editForm, title: e.target.value })
-                      }
-                    />
-                    <TextField
-                      className="my-1"
-                      label="Description"
-                      value={editForm.description}
-                      onChange={(e) =>
-                        setEditForm({
-                          ...editForm,
-                          description: e.target.value,
-                        })
-                      }
-                    />
-                  </>
-                ) : (
-                  <>
-                    <div className="text-2xl">{item.title}</div>
-                    <div>{item.description}</div>
-                  </>
-                )}
-              </div>
-              <div className="grid justify-items-end content-around">
-                <div>
-                  {editIndex === index ? (
-                    <DefaultButton
-                      text="Cancel"
-                      onClick={() => closeEditForm()}
-                      allowDisabledFocus
-                    />
-                  ) : (
-                    <DefaultButton
-                      text="Edit"
-                      onClick={() => openEditForm(index, item)}
-                      allowDisabledFocus
-                    />
-                  )}
-                </div>
-                <div>
-                  {editIndex === index ? (
-                    <DefaultButton
-                      text="Save"
-                      onClick={() => saveEdit(item.id)}
-                      allowDisabledFocus
-                    />
-                  ) : (
-                    <DefaultButton
-                      text="Delete"
-                      onClick={() => deleteItems(item.id)}
-                      allowDisabledFocus
-                    />
-                  )}
-                </div>
-              </div>
-            </div>
-          );
-        })}
-      </div>
+      <ItemList data={data} refresh={refresh} />
     </div>
   );
 };

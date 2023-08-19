@@ -38,10 +38,17 @@ class Controller {
   static updateCtrl(req, res) {
     try {
       let data = model.updateData(req.body, req.params);
-      res.status(200).json({
-        status: 200,
-        data: data,
-      });
+      if (data) {
+        res.status(200).json({
+          status: 200,
+          data: "Berhasil",
+        });
+      } else {
+        res.status(400).json({
+          status: 400,
+          data: "Data tidak ditemukan",
+        });
+      }
     } catch (error) {
       res.status(400).json({
         status: 400,
@@ -53,12 +60,22 @@ class Controller {
   static deleteCtrl(req, res) {
     try {
       let data = model.deleteData(req.params);
-      res.status(200).json({
-        status: true,
-        data: data,
-      });
+      if (data) {
+        res.status(200).json({
+          status: 200,
+          data: "Berhasil",
+        });
+      } else {
+        res.status(400).json({
+          status: 400,
+          data: "Data tidak ditemukan",
+        });
+      }
     } catch (error) {
-      res.status(400).json("gagal");
+      res.status(400).json({
+        status: 400,
+        data: error,
+      });
     }
   }
 }
