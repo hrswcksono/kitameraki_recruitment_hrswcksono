@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { TextField } from "@fluentui/react/lib/TextField";
 import { DefaultButton } from "@fluentui/react/lib/Button";
-import { addItems, getItems } from "./fetchApi";
+import { addItems, getItems } from "../fetchApi";
 import { useLocation, useNavigate } from "react-router-dom";
-import ItemList from "./components/ItemList";
+import ItemList from "../components/ItemList";
 import { useForm } from "react-hook-form";
 
 const Page = () => {
@@ -71,7 +71,7 @@ const Page = () => {
 
   return (
     <div className="w-8/12 justify-self-center">
-      <div className="text-3xl font-bold underline my-5">
+      <div className="text-3xl font-bold my-5 text-center">
         Task Management App
       </div>
       <form onSubmit={handleSubmit(submitFormItem)}>
