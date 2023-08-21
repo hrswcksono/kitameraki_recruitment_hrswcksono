@@ -19,6 +19,7 @@ const CustomForm = ({ formData }) => {
 
   return (
     <div className="w-8/12 max-h-fit border-2 rounded-md">
+      <div className="my-3">Name of the form must be different</div>
       <div className="flex justify-start w-full bg-red-300 place-items-stretch">
         {formData.map((temp, idx) => {
           return (

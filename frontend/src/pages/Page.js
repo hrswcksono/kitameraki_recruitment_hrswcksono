@@ -43,9 +43,9 @@ const Page = () => {
 
   const submitFormItem = (input) => {
     console.log(input);
-    addItems(input, () => {
-      refresh();
-    });
+    // addItems(input, () => {
+    //   refresh();
+    // });
   };
 
   const refresh = () => {
@@ -116,6 +116,7 @@ const Page = () => {
                           <Field
                             inputType={data.type}
                             label={getLabel(data.id)}
+                            formControl={{ ...register(getLabel(data.id)) }}
                           />
                         </div>
                       </div>

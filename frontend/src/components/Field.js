@@ -3,11 +3,11 @@ import { TextField } from "@fluentui/react/lib/TextField";
 import { SpinButton } from "@fluentui/react/lib/SpinButton";
 import { DatePicker, defaultDatePickerStrings } from "@fluentui/react";
 
-const Field = ({ inputType, label }) => {
+const Field = ({ inputType, label, formControl }) => {
   const renderInput = (inputType, label) => {
     switch (inputType) {
       case "TextField":
-        return <TextField label={label} />;
+        return <TextField label={label} {...formControl} />;
       case "SpinButton":
         return (
           <SpinButton
@@ -16,6 +16,7 @@ const Field = ({ inputType, label }) => {
             min={0}
             max={100}
             step={1}
+            {...formControl}
             incrementButtonAriaLabel="Increase value by 1"
             decrementButtonAriaLabel="Decrease value by 1"
           />
@@ -23,6 +24,7 @@ const Field = ({ inputType, label }) => {
       case "DatePicker":
         return (
           <DatePicker
+            {...formControl}
             label={label}
             placeholder="Select a date..."
             ariaLabel="Select a date"

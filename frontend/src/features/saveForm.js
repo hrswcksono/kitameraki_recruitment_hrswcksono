@@ -6,6 +6,7 @@ export const saveForm = createSlice({
     value: [[]],
     editValue: [],
     label: [],
+    duplicate: 1,
   },
   reducers: {
     save: (state, action) => {
@@ -39,10 +40,28 @@ export const saveForm = createSlice({
     deleteEdit: (state) => {
       state.editValue = [];
     },
+    checkForm: (state) => {
+      let duplicateTx = 1;
+      console.log("tedas");
+      state.label.forEach((item) => {
+        let test = state.label.filter((temp) => temp[1] === item[1]);
+        if (test.length > 1) {
+          duplicateTx = 2;
+        }
+      });
+      state.duplicate = duplicateTx;
+    },
   },
 });
 
-export const { save, deleteForm, addForm, editProp, saveProp, deleteEdit } =
-  saveForm.actions;
+export const {
+  save,
+  deleteForm,
+  addForm,
+  editProp,
+  saveProp,
+  deleteEdit,
+  checkForm,
+} = saveForm.actions;
 
 export default saveForm.reducer;
