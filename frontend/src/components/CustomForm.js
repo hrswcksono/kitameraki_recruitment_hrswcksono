@@ -5,7 +5,7 @@ import Field from "./Field";
 const CustomForm = ({ formData }) => {
   return (
     <div className="w-9/12 max-h-fit border-2 rounded-md">
-      <div className="flex justify-start">
+      <div className="flex justify-start w-full bg-red-300 place-items-stretch">
         {formData.map((temp, idx) => {
           return (
             <Droppable
@@ -15,7 +15,7 @@ const CustomForm = ({ formData }) => {
             >
               {(provided, snapshot) => (
                 <div
-                  className="h-auto p-5 gap-3 grid bg-gray-100 content-start w-6/12"
+                  className="h-auto p-5 grid gap-y-3 bg-gray-100 content-start w-full"
                   {...provided.droppableProps}
                   ref={provided.innerRef}
                 >

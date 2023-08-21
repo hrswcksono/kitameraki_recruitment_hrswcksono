@@ -1,3 +1,4 @@
+/* eslint-disable array-callback-return */
 import React from "react";
 import AddComp from "../components/AddComp";
 import { DragDropContext } from "react-beautiful-dnd";
@@ -14,9 +15,6 @@ const reorder = (list, startIndex, endIndex) => {
   return result;
 };
 
-/**
- * Moves an item from one list to another list.
- */
 const move = (source, destination, droppableSource, droppableDestination) => {
   const sourceClone = Array.from(source);
   const destClone = Array.from(destination);
@@ -29,6 +27,55 @@ const move = (source, destination, droppableSource, droppableDestination) => {
   result[droppableDestination.droppableId] = destClone;
 
   return result;
+};
+
+const getKey = (array, inputKey, key) => {
+  const number = array[inputKey].map((element) => {
+    if (element.id[0] === key.toString()) {
+      return +element.id[2];
+    }
+  });
+  return number;
+};
+
+const checkIndex = (array, inputKey, key) =>
+  array[inputKey].find((element) => element.id[0] === key.toString());
+
+const setIndexItem = (array, key) => {
+  let destructKey = Object.keys(array);
+  if (destructKey.length === 1) {
+    const keyOne = destructKey[0];
+    let index = 0;
+    if (array[keyOne].length === 0) {
+      return 1;
+    } else {
+      const number = getKey(array, keyOne, key);
+      index = Math.max(...number) + 1;
+      return index;
+    }
+  } else {
+    const keyOne = destructKey[0],
+      keyTwo = destructKey[1];
+    let arrNum1 = [];
+    let arrNum2 = [];
+    if (checkIndex(array, keyOne, key) !== undefined) {
+      arrNum1 = getKey(array, keyOne, key);
+      console.log(arrNum1);
+    }
+    console.log(
+      `${keyTwo} check ${checkIndex(array, keyTwo, key) !== undefined}`
+    );
+    if (checkIndex(array, keyTwo, key) !== undefined) {
+      arrNum2 = getKey(array, keyTwo, key);
+      console.log(arrNum2);
+    }
+    const number = [...arrNum1, ...arrNum2];
+    if (number.length === 0) {
+      return 1;
+    }
+    const index = Math.max(...number) + 1;
+    return index;
+  }
 };
 
 const SettingPage = () => {
@@ -46,15 +93,8 @@ const SettingPage = () => {
 
     if (source.droppableId === "controls_droppable") {
       let newState = [...value];
-      const number = newState[dInd].map((element) => +element.id[2]);
-      console.log(number);
-      let index = Math.max(...number) + 1;
-      console.log(index);
-      if (newState[dInd].length === 0) {
-        index = 0;
-      }
       const newFormControl = {
-        id: `${dInd}-${index}`,
+        id: `${dInd}-${setIndexItem(value, dInd)}`,
         type: draggableId,
         config: {},
       };
@@ -71,7 +111,7 @@ const SettingPage = () => {
       const newState = [...value];
       newState[sInd] = result[sInd];
       newState[dInd] = result[dInd];
-      dispatch(save(newState.filter((group) => group.length)));
+      dispatch(save(newState));
     }
   }
 
@@ -81,7 +121,7 @@ const SettingPage = () => {
         <DefaultButton
           text="Add row"
           allowDisabledFocus
-          disabled={value === 2 ? true : false}
+          disabled={value.length === 2 ? true : false}
           onClick={() => dispatch(addForm())}
         />
         <DefaultButton
