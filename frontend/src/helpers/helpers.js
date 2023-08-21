@@ -24,8 +24,6 @@ const getKey = (array, inputKey, key) => {
   const filterNumber = array[inputKey].filter(
     (item) => item.id[0] === key.toString()
   );
-  console.log("filter number");
-  console.log(filterNumber);
   const number = filterNumber.map((element) => +element.id[2]);
   return number;
 };
@@ -52,14 +50,9 @@ const setIndexItem = (array, key) => {
     let arrNum2 = [];
     if (checkIndex(array, keyOne, key) !== undefined) {
       arrNum1 = getKey(array, keyOne, key);
-      console.log(arrNum1);
     }
-    console.log(
-      `${keyTwo} check ${checkIndex(array, keyTwo, key) !== undefined}`
-    );
     if (checkIndex(array, keyTwo, key) !== undefined) {
       arrNum2 = getKey(array, keyTwo, key);
-      console.log(arrNum2);
     }
     const number = [...arrNum1, ...arrNum2];
     if (number.length === 0) {
@@ -70,4 +63,6 @@ const setIndexItem = (array, key) => {
   }
 };
 
-export { setIndexItem, move, reorder };
+const findIndex = (id, label) => label.findIndex((item) => item[0] === id);
+
+export { setIndexItem, move, reorder, findIndex };

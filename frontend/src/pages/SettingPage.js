@@ -7,6 +7,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { save, addForm, deleteForm } from "../features/saveForm";
 import { DefaultButton } from "@fluentui/react/lib/Button";
 import { move, setIndexItem, reorder } from "../helpers/helpers";
+import PropField from "../components/PropField";
 
 const SettingPage = () => {
   const { value } = useSelector((state) => state.save);
@@ -23,11 +24,20 @@ const SettingPage = () => {
 
     if (source.droppableId === "controls_droppable") {
       let newState = [...value];
-      const newFormControl = {
-        id: `${dInd}-${setIndexItem(value, dInd)}`,
-        type: draggableId,
+      const newFormControl = {};
+      Object.defineProperties(newFormControl, {
+        id: {
+          value: `${dInd}-${setIndexItem(value, dInd)}`,
+        },
+        label: {
+          value: draggableId,
+          writable: true, // 👈️ set property to writable
+        },
+        type: {
+          value: draggableId,
+        },
         config: {},
-      };
+      });
       newState[dInd] = Object.assign([], newState[dInd]);
       newState[dInd].splice(destination.index, 0, newFormControl);
       dispatch(save(newState));
@@ -41,12 +51,12 @@ const SettingPage = () => {
       const newState = [...value];
       newState[sInd] = result[sInd];
       newState[dInd] = result[dInd];
-      dispatch(save(newState));
+      dispatch(save(newState.filter((group) => group.length)));
     }
   }
 
   return (
-    <div className="h-auto">
+    <div className="h-auto mb-3">
       <div className="flex gap-x-5 justify-center mb-5">
         <DefaultButton
           text="Add row"
@@ -64,6 +74,7 @@ const SettingPage = () => {
         <div className="flex justify-evenly">
           <AddComp />
           <CustomForm formData={value} />
+          <PropField />
         </div>
       </DragDropContext>
     </div>

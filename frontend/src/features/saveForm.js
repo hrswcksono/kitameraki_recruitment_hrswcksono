@@ -4,9 +4,22 @@ export const saveForm = createSlice({
   name: "save",
   initialState: {
     value: [[]],
+    editValue: [],
+    label: [],
   },
   reducers: {
     save: (state, action) => {
+      let labelData = [];
+      action.payload.forEach((item) => {
+        item.forEach((data) => {
+          if (state.label.find((item) => item[0] === data.id) === undefined) {
+            console.log(data.id);
+            labelData.push([data.id, data.label]);
+          }
+          // }
+        });
+      });
+      state.label = [...labelData, ...state.label];
       state.value = action.payload;
     },
     deleteForm: (state) => {
@@ -17,9 +30,16 @@ export const saveForm = createSlice({
         state.value.push([]);
       }
     },
+    editProp: (state, action) => {
+      state.editValue = action.payload;
+    },
+    saveProp: (state, action) => {
+      state.label = action.payload;
+    },
   },
 });
 
-export const { save, deleteForm, addForm } = saveForm.actions;
+export const { save, deleteForm, addForm, editProp, saveProp } =
+  saveForm.actions;
 
 export default saveForm.reducer;

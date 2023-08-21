@@ -3,15 +3,15 @@ import { TextField } from "@fluentui/react/lib/TextField";
 import { SpinButton } from "@fluentui/react/lib/SpinButton";
 import { DatePicker, defaultDatePickerStrings } from "@fluentui/react";
 
-const Field = ({ inputType }) => {
-  const renderInput = (inputType) => {
+const Field = ({ inputType, label }) => {
+  const renderInput = (inputType, label) => {
     switch (inputType) {
       case "TextField":
-        return <TextField label="Text Field" />;
+        return <TextField label={label} />;
       case "SpinButton":
         return (
           <SpinButton
-            label="SpinButton"
+            label={label}
             defaultValue="0"
             min={0}
             max={100}
@@ -23,7 +23,7 @@ const Field = ({ inputType }) => {
       case "DatePicker":
         return (
           <DatePicker
-            label="Date picker"
+            label={label}
             placeholder="Select a date..."
             ariaLabel="Select a date"
             strings={defaultDatePickerStrings}
@@ -33,7 +33,7 @@ const Field = ({ inputType }) => {
         return null;
     }
   };
-  return renderInput(inputType);
+  return renderInput(inputType, label);
 };
 
 export default Field;

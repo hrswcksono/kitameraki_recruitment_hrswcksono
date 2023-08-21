@@ -44,7 +44,6 @@ const Page = () => {
   };
 
   const refresh = () => {
-    console.log("refresh");
     setEndPage(false);
     setPage(1);
     setData([]);
@@ -102,11 +101,14 @@ const Page = () => {
             <div className="flex justify-start gap-x-3 w-full place-items-stretch mb-5">
               {value.map((temp, idx) => {
                 return (
-                  <div className="h-auto grid gap-y-3 content-start w-full">
+                  <div
+                    key={`tab${idx}`}
+                    className="h-auto grid gap-y-3 content-start w-full"
+                  >
                     {temp.map((data, index) => (
-                      <div>
+                      <div key={index.toString()}>
                         <div className="bg-white">
-                          <Field inputType={data.type} />
+                          <Field inputType={data.type} label={data.label} />
                         </div>
                       </div>
                     ))}
