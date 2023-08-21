@@ -16,7 +16,6 @@ export const saveForm = createSlice({
             console.log(data.id);
             labelData.push([data.id, data.label]);
           }
-          // }
         });
       });
       state.label = [...labelData, ...state.label];
@@ -24,6 +23,7 @@ export const saveForm = createSlice({
     },
     deleteForm: (state) => {
       state.value = [[]];
+      state.label = [];
     },
     addForm: (state) => {
       if (state.value.length < 2) {
@@ -36,10 +36,13 @@ export const saveForm = createSlice({
     saveProp: (state, action) => {
       state.label = action.payload;
     },
+    deleteEdit: (state) => {
+      state.editValue = [];
+    },
   },
 });
 
-export const { save, deleteForm, addForm, editProp, saveProp } =
+export const { save, deleteForm, addForm, editProp, saveProp, deleteEdit } =
   saveForm.actions;
 
 export default saveForm.reducer;

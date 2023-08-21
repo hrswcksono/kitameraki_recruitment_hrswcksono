@@ -5,11 +5,12 @@ import { addItems, getItems } from "../fetchApi";
 import { useLocation, useNavigate } from "react-router-dom";
 import ItemList from "../components/ItemList";
 import { useForm } from "react-hook-form";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import Field from "../components/Field";
+import { findIndex } from "../helpers/helpers";
 
 const Page = () => {
-  const { value } = useSelector((state) => state.save);
+  const { value, label } = useSelector((state) => state.save);
 
   const {
     register,
@@ -34,6 +35,10 @@ const Page = () => {
         navigation("");
       }
     }
+  };
+
+  const getLabel = (id) => {
+    return label[findIndex(id, label)][1];
   };
 
   const submitFormItem = (input) => {
@@ -108,7 +113,10 @@ const Page = () => {
                     {temp.map((data, index) => (
                       <div key={index.toString()}>
                         <div className="bg-white">
-                          <Field inputType={data.type} label={data.label} />
+                          <Field
+                            inputType={data.type}
+                            label={getLabel(data.id)}
+                          />
                         </div>
                       </div>
                     ))}
