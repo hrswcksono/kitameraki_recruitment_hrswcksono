@@ -5,8 +5,12 @@ import { addItems, getItems } from "../fetchApi";
 import { useLocation, useNavigate } from "react-router-dom";
 import ItemList from "../components/ItemList";
 import { useForm } from "react-hook-form";
+import { useDispatch, useSelector } from "react-redux";
+import Field from "../components/Field";
 
 const Page = () => {
+  const { value } = useSelector((state) => state.save);
+
   const {
     register,
     handleSubmit,
@@ -76,6 +80,7 @@ const Page = () => {
         Task Management App
       </div>
       <form onSubmit={handleSubmit(submitFormItem)}>
+        <div className="text-lg font-semibold my-5">Standard Fields</div>
         <TextField
           label="Title"
           {...register("title", {
@@ -91,7 +96,26 @@ const Page = () => {
           autoAdjustHeight
           {...register("description")}
         />
-        {/* <input type="submit" /> */}
+        {value[0].length !== 0 ? (
+          <>
+            <div className="text-lg font-semibold my-5">Optional Fields</div>
+            <div className="flex justify-start gap-x-3 w-full place-items-stretch mb-5">
+              {value.map((temp, idx) => {
+                return (
+                  <div className="h-auto grid gap-y-3 content-start w-full">
+                    {temp.map((data, index) => (
+                      <div>
+                        <div className="bg-white">
+                          <Field inputType={data.type} />
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                );
+              })}
+            </div>
+          </>
+        ) : null}
         <DefaultButton
           text="Add Item"
           allowDisabledFocus
