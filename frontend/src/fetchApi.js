@@ -1,6 +1,6 @@
 import axios from "axios";
 import Swal from "sweetalert2";
-const URL = "https://kind-erin-bat-tux.cyclic.cloud/api";
+const URL = "http://localhost:3001/api";
 
 const getItems = async (page, limit, cb) => {
   try {
