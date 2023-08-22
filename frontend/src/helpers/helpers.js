@@ -24,7 +24,8 @@ const getKey = (array, inputKey, key) => {
   const filterNumber = array[inputKey].filter(
     (item) => item.id[0] === key.toString()
   );
-  const number = filterNumber.map((element) => +element.id[2]);
+  const number = filterNumber.map((element) => +element.id.slice(2));
+  console.log(number);
   return number;
 };
 

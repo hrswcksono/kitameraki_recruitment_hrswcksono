@@ -42,10 +42,9 @@ const Page = () => {
   };
 
   const submitFormItem = (input) => {
-    console.log(input);
-    // addItems(input, () => {
-    //   refresh();
-    // });
+    addItems(input, () => {
+      refresh();
+    });
   };
 
   const refresh = () => {

@@ -10,7 +10,7 @@ const getItems = async (page, limit, cb) => {
     });
     cb(items.data);
   } catch (error) {
-    console.log(error);
+    Swal.fire("Error", "Internet error", "error");
   }
 };
 
@@ -24,7 +24,7 @@ const addItems = async (item, cb) => {
     Swal.fire("Add Item", item.title + " has been added", "success");
     cb(result.data);
   } catch (error) {
-    console.log(error);
+    Swal.fire("Error", "Internet error", "error");
   }
 };
 
@@ -39,7 +39,7 @@ const editItems = async (id, item, cb) => {
     Swal.fire("Edit Item", item.title + " has been updated", "success");
     cb(result.data);
   } catch (error) {
-    console.log(error);
+    Swal.fire("Error", "Internet error", "error");
   }
 };
 
@@ -64,7 +64,7 @@ const deleteItem = async (id, cb) => {
       }
     });
   } catch (error) {
-    console.log(error);
+    Swal.fire("Error", "Internet error", "error");
   }
 };
 

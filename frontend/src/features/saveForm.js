@@ -14,7 +14,6 @@ export const saveForm = createSlice({
       action.payload.forEach((item) => {
         item.forEach((data) => {
           if (state.label.find((item) => item[0] === data.id) === undefined) {
-            console.log(data.id);
             labelData.push([data.id, data.label]);
           }
         });
@@ -42,7 +41,6 @@ export const saveForm = createSlice({
     },
     checkForm: (state) => {
       let duplicateTx = 1;
-      console.log("tedas");
       state.label.forEach((item) => {
         let test = state.label.filter((temp) => temp[1] === item[1]);
         if (test.length > 1) {
